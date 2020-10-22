@@ -1,46 +1,84 @@
-import { useState, useEffect } from 'react'
+import React from 'react';
+import PropTypes from 'prop-types';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogActions from '@material-ui/core/DialogActions';
+import Typography from '@material-ui/core/Typography';
+import { withStyles } from '@material-ui/core/styles';
+import Link from 'next/link';
+import { inject, observer } from 'mobx-react';
 
-const Home = () => {
-  const [input, setInput] = useState('')
-  const [message, setMessage] = useState(null)
+const styles = theme => ({
+  root: {
+    textAlign: 'center',
+    paddingTop: theme.spacing(20),
+  },
+});
 
-  useEffect(() => {
-    const handleMessage = (event, message) => setMessage(message)
-    global.ipcRenderer.on('message', handleMessage)
+@inject('store')
+@observer
+class Index extends React.Component {
+  state = {
+    open: false,
+  };
 
-    return () => {
-      global.ipcRenderer.removeListener('message', handleMessage)
-    }
-  }, [])
+  handleClose = () => {
+    this.setState({
+      open: false,
+    });
+  };
 
-  const handleSubmit = (event) => {
-    event.preventDefault()
-    global.ipcRenderer.send('message', input)
-    setMessage(null)
+  handleClick = () => {
+    this.setState({
+      open: true,
+    });
+  };
+
+  render() {
+    const { classes, store } = this.props;
+    const { testStore } = store;
+    const { open } = this.state;
+
+    return (
+      <div className={classes.root}>
+        <Dialog open={open} onClose={this.handleClose}>
+          <DialogTitle>Super Secret Password</DialogTitle>
+          <DialogContent>
+            <DialogContentText>1-2-3-4-5</DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button color="primary" onClick={this.handleClose}>
+              OK
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Typography variant="h4" gutterBottom>
+          Material-UI
+        </Typography>
+        <Typography variant="h4" gutterBottom>
+          {testStore.test}
+        </Typography>
+        <Typography variant="subtitle1" gutterBottom>
+          example project
+        </Typography>
+        <Typography gutterBottom>
+          <Link href="/about">
+            <a>Go to the about page</a>
+          </Link>
+        </Typography>
+        <Button variant="contained" color="secondary" onClick={this.handleClick}>
+          Super Secret Password
+        </Button>
+      </div>
+    );
   }
-
-  return (
-    <div>
-      <h1>Hello Electron!</h1>
-
-      {message && <p>{message}</p>}
-
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-        />
-      </form>
-
-      <style jsx>{`
-        h1 {
-          color: red;
-          font-size: 50px;
-        }
-      `}</style>
-    </div>
-  )
 }
 
-export default Home
+Index.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(Index);

@@ -18,6 +18,8 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.12.1",
+    "@babel/plugin-proposal-decorators": "^7.12.1",
     "electron": "^7.1.7",
     "electron-builder": "^21.2.0",
     "next": "latest",
@@ -25,8 +27,11 @@
     "react-dom": "^16.12.0"
   },
   "dependencies": {
+    "@material-ui/core": "^4.11.0",
     "electron-is-dev": "^1.1.0",
-    "electron-next": "^3.1.5"
+    "electron-next": "^3.1.5",
+    "mobx": "^6.0.1",
+    "mobx-react": "^7.0.0"
   },
   "license": "MIT"
 }
